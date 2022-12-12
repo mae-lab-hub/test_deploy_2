@@ -25,15 +25,11 @@ uploadRouter.post("/upload", upload.any(), async (req, res) => {
       var r 
    
       for (let f = 0; f < files.length; f += 1) {
-        r = await uploadFile(files[f]);
-        console.log(typeof(r))
-        r = String(r)
+        await uploadFile(files[f]);
       }
-      console.log(r);
       console.log(id);
       return res.status(200).json({
-        data: r, 
-        img: id
+        data: id, 
       });
     } catch (f) {
       console.log(f.message);
@@ -58,14 +54,6 @@ uploadRouter.post("/upload", upload.any(), async (req, res) => {
     });
     console.log(`Uploaded file ${data} ${data.id}`);
     id = data.id;
-    const Url = `https://d519-74-12-78-193.ngrok.io/predict/${data.id}`
-    await fetch(Url)
-    .then(data=>{return data.json()})
-    .then(res=>{
-        console.log(res)
-        r = res.bean
-    })
-    return r
   };
    
   module.exports = uploadRouter;

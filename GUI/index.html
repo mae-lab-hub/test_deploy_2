@@ -7,17 +7,22 @@
 </head>
 
 <body id="body">
-  <form>
-    <input type="file" name="Files" required multiple />
-    <button type="submit"></button>
-  </form>
-  <img id="bean">
-  <h4 id="prediction">
-    <h4>
-
+  <center style=margin:50px>
+    <form>
+      <input type="file" name="Files" required multiple />
+      <button type="submit">UPLOAD PICTURE</button>
+    </form>
+    <img style=margin:20px id="bean" src="https://drive.google.com/uc?export=view&id=1uhphHp96_z3kTdsgSJHefWBTLKTeenoR">
+    <div>
+      <button onclick="predict()">PREDICT</button>
+    </div>
+    <h4 id="prediction">
+      <h4>
+  </center>
 </body>
 <script>
   const formElem = document.querySelector('form');
+  var img;
   formElem.addEventListener('submit', async (e) => {
     console.log("form submitted")
     e.preventDefault();
@@ -25,15 +30,24 @@
       method: 'POST',
       body: new FormData(formElem),
     }).then(res => res.json()).then(data => {
-      const url = "https://drive.google.com/uc?export=view&id=" + data.img
-      var img = document.getElementById("bean")
-      img.src = url
-
-      const prediction = document.getElementById("prediction")
-      prediction.innerHTML = "PREDICTED VALUE: " + data.data + " bean."
+      img = data.data
+      const url = "https://drive.google.com/uc?export=view&id=" + img
+      var img_display = document.getElementById("bean")
+      img_display.src = url
     });
-
   });
+
+  async function predict() {
+    const Url = `https://8059-74-12-78-193.ngrok.io/predict/${img}`
+    await fetch(Url).then(res => res.json())
+      .then(res => {
+        console.log("holaaaaa" + res)
+        const prediction = document.getElementById("prediction")
+        prediction.innerHTML = "PREDICTED VALUE: " + res.bean + " bean."
+        console.log(res)
+        r = res.bean
+      })
+  }
 </script>
 
 </html>

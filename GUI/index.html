@@ -10,8 +10,9 @@
       <input type="file" name="Files" required multiple />
       <button type="submit">Submit</button>
     </form>
+    <h4 id="prediction"><h4>
+    </p>
   </body>
-
   <script>
     const formElem = document.querySelector('form');
     formElem.addEventListener('submit', async (e) => {
@@ -20,7 +21,11 @@
       await fetch('/upload', {
         method: 'POST',
         body: new FormData(formElem),
+      }).then(res => res.json()).then( data => {
+        const prediction  = document.getElementById("prediction")
+        prediction.innerHTML = "PREDICTED VALUE: " + data.data + " bean."
       });
+
     });
   </script>
 </html>

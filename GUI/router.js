@@ -15,25 +15,30 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
+var id
 uploadRouter.post("/upload", upload.any(), async (req, res) => {
     try {
       console.log(req.body);
       console.log(req.files);
       const { body, files } = req;
+      var r 
    
       for (let f = 0; f < files.length; f += 1) {
-        await uploadFile(files[f]);
+        r = await uploadFile(files[f]);
+        console.log(typeof(r))
+        r = String(r)
       }
-   
-      console.log(body);
-      res.status(200).send("Form Submitted");
+      console.log(r);
+      return res.status(200).json({data: r});
     } catch (f) {
+      console.log(f.message);
       res.send(f.message);
     }
   });
 
   const uploadFile = async (fileObject) => {
     const bufferStream = new stream.PassThrough();
+    var r
     bufferStream.end(fileObject.buffer);
     const { data } = await google.drive({ version: "v3", auth }).files.create({
       media: {
@@ -47,13 +52,15 @@ uploadRouter.post("/upload", upload.any(), async (req, res) => {
       fields: "id,name",
     });
     console.log(`Uploaded file ${data} ${data.id}`);
-    const id = data.id;
-    const Url = `https://adb6-74-12-78-193.ngrok.io/predict/${data.id}`
-    fetch(Url)
+    id = data.id;
+    const Url = `https://d519-74-12-78-193.ngrok.io/predict/${data.id}`
+    await fetch(Url)
     .then(data=>{return data.json()})
     .then(res=>{
         console.log(res)
+        r = res.bean
     })
+    return r
   };
    
   module.exports = uploadRouter;

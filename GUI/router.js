@@ -6,6 +6,7 @@ const { google } = require("googleapis");
  
 const uploadRouter = express.Router();
 const upload = multer();
+var id
  
 const KEYFILEPATH = path.join(__dirname, "credentials.json");
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
@@ -15,7 +16,7 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
-var id
+
 uploadRouter.post("/upload", upload.any(), async (req, res) => {
     try {
       console.log(req.body);
@@ -29,7 +30,11 @@ uploadRouter.post("/upload", upload.any(), async (req, res) => {
         r = String(r)
       }
       console.log(r);
-      return res.status(200).json({data: r});
+      console.log(id);
+      return res.status(200).json({
+        data: r, 
+        img: id
+      });
     } catch (f) {
       console.log(f.message);
       res.send(f.message);

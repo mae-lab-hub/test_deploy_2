@@ -1,31 +1,39 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
 
-  <body>
-    <form>
-      <input type="file" name="Files" required multiple />
-      <button type="submit">Submit</button>
-    </form>
-    <h4 id="prediction"><h4>
-    </p>
-  </body>
-  <script>
-    const formElem = document.querySelector('form');
-    formElem.addEventListener('submit', async (e) => {
-        console.log("form submitted")
-      e.preventDefault();
-      await fetch('/upload', {
-        method: 'POST',
-        body: new FormData(formElem),
-      }).then(res => res.json()).then( data => {
-        const prediction  = document.getElementById("prediction")
-        prediction.innerHTML = "PREDICTED VALUE: " + data.data + " bean."
-      });
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
 
+<body id="body">
+  <form>
+    <input type="file" name="Files" required multiple />
+    <button type="submit"></button>
+  </form>
+  <img id="bean">
+  <h4 id="prediction">
+    <h4>
+
+</body>
+<script>
+  const formElem = document.querySelector('form');
+  formElem.addEventListener('submit', async (e) => {
+    console.log("form submitted")
+    e.preventDefault();
+    await fetch('/upload', {
+      method: 'POST',
+      body: new FormData(formElem),
+    }).then(res => res.json()).then(data => {
+      const url = "https://drive.google.com/uc?export=view&id=" + data.img
+      var img = document.getElementById("bean")
+      img.src = url
+
+      const prediction = document.getElementById("prediction")
+      prediction.innerHTML = "PREDICTED VALUE: " + data.data + " bean."
     });
-  </script>
+
+  });
+</script>
+
 </html>

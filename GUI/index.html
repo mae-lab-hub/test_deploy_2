@@ -34,11 +34,27 @@
       const url = "https://drive.google.com/uc?export=view&id=" + img
       var img_display = document.getElementById("bean")
       img_display.src = url
+
+
+      
+    console.log(img)
+    const Url = `https://bean-class.onrender.com/main/predict/${img}`
+    fetch(Url).then(res => res.json())
+      .then(res => {
+        console.log("holaaaaa" + res)
+        const prediction = document.getElementById("prediction")
+        prediction.innerHTML = "PREDICTED VALUE: " + res.bean + " bean."
+        console.log(res)
+        r = res.bean
+      })
+  
+      
     });
   });
 
   async function predict() {
-    const Url = `https://8059-74-12-78-193.ngrok.io/predict/${img}`
+    console.log(img)
+    const Url = `https://bean-class.onrender.com/predict/${img}`
     await fetch(Url).then(res => res.json())
       .then(res => {
         console.log("holaaaaa" + res)
